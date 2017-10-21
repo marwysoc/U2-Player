@@ -61,7 +61,7 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttons"
         android:layout_alignEnd="@+id/artist_text_view"
@@ -78,8 +78,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignStart="@+id/buttons"
         android:paddingLeft="10dp"
-        android:text="00:34"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="0 min 16 s" />
 
     <TextView
         android:id="@+id/time2"
@@ -89,8 +89,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:paddingRight="10dp"
-        android:text="4:14"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="4 min 32 s" />
 
     <LinearLayout
         android:id="@+id/buttons"
