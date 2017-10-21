@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">U2 Player</string>
+    <string name="play"><![CDATA[>]]></string>
+    <string name="rewind"><![CDATA[<<]]></string>
+    <string name="forward"><![CDATA[>>]]></string>
+    <string name="pause">||</string>
+    <string name="next"><![CDATA[>]]></string>
+    <string name="previous"><![CDATA[<]]></string>
 </resources>
