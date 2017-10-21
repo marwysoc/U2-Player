@@ -70,7 +70,7 @@
         android:layout_alignStart="@+id/artist_text_view" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/time1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/seekBar"
@@ -82,7 +82,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/time2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/seekBar"
