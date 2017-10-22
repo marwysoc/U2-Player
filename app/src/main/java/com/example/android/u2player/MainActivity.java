@@ -4,14 +4,16 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private Button rewindButton, pauseButton, playButton, forwardButton;
     private SeekBar seekBar;
@@ -38,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         pauseButton.setEnabled(false);
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
-        seekBar.setClickable(false);
+        seekBar.setEnabled(false);
+        seekBar.setOnSeekBarChangeListener(this);
 
         artistTextView = (TextView) findViewById(R.id.artist_text_view);
         titleTextView = (TextView) findViewById(R.id.title_text_view);
@@ -46,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         time2TextView = (TextView) findViewById(R.id.time2);
 
         mHandler = new Handler();
-        mMediaPlayer = MediaPlayer.create(this, R.raw.track01);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,40 +65,47 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void pauseMusic() {
-        // pause the sound
-        mMediaPlayer.pause();
-        // disable puase button - sound is already paused
-        pauseButton.setEnabled(false);
-        // enable play button
-        playButton.setEnabled(true);
+    private void playMusic() {
+        // If MediaPlayer is empty create it
+        if (mMediaPlayer == null) {
+            mMediaPlayer = MediaPlayer.create(this, R.raw.track01);
+            seekBar.setEnabled(true);
+        }
+
+        // If MediaPlayer is playing then pause it
+        if (mMediaPlayer.isPlaying()) {
+            pauseMusic();
+        } else {
+            // Otherwise start playing
+            mMediaPlayer.start();
+            // Set duration of the sound
+            durationTime = mMediaPlayer.getDuration();
+            // Set the duration time to the textview
+            time2TextView.setText(String.format("%d min %d s",
+                    TimeUnit.MILLISECONDS.toMinutes((long) durationTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) durationTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                    durationTime))));
+
+            // Set the maximum value to the seekbar
+            seekBar.setMax(mMediaPlayer.getDuration());
+            // Enable the pause button when playing sound
+            pauseButton.setEnabled(true);
+            // Disable the play button - sound is already playing
+            playButton.setEnabled(false);
+
+            // Update seekbar and textview while playing the sound
+            updateProgress();
+        }
     }
 
-    private void playMusic() {
-        // start playing sound
-        mMediaPlayer.start();
-        // get the duration time of the sound
-        durationTime = mMediaPlayer.getDuration();
-
-        // set the duration time to the textview
-        time2TextView.setText(String.format("%d min %d s",
-                TimeUnit.MILLISECONDS.toMinutes((long) durationTime),
-                TimeUnit.MILLISECONDS.toSeconds((long) durationTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                durationTime))));
-
-        // set progress to the seekbar
-        //seekBar.setProgress((int)startTime);
-        // set max value to the seekbar (max value is the duration of the sound)
-        seekBar.setMax((int) durationTime);
-
-        // update seekbar and textview while playing the sound
-        updateProgress();
-
-        // enable the pause button when playing sound
-        pauseButton.setEnabled(true);
-        // disable the play button - sound is already playing
-        playButton.setEnabled(false);
+    private void pauseMusic() {
+        // Pause the sound
+        mMediaPlayer.pause();
+        // Disable puase button - sound is already paused
+        pauseButton.setEnabled(false);
+        // Enable play button
+        playButton.setEnabled(true);
     }
 
     Runnable runnable = new Runnable() {
@@ -106,16 +115,49 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // update progress in seekBar and time1TextView
+    // Update progress in seekBar and time1TextView
     private void updateProgress() {
+        // Get data from the MediaPlayer
         startTime = mMediaPlayer.getCurrentPosition();
+        // Update seekbar
         seekBar.setProgress((int)startTime);
-        // set the current time to the textview
+        // Update textview with the current time of the sound
         time1TextView.setText(String.format("%d min %d s",
                 TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                 TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                 startTime))));
         mHandler.postDelayed(runnable, 100);
+    }
+
+
+    // This method is called when user touches the seekbar and changes its position
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        try {
+            if (mMediaPlayer.isPlaying() || mMediaPlayer != null) {
+                if (fromUser)
+                    // go to the position from the seekbar
+                    mMediaPlayer.seekTo(progress);
+            } else if (mMediaPlayer == null) {
+                // Inform user any sound is playing now
+                Toast.makeText(getApplicationContext(), "You're not playing any song now",
+                        Toast.LENGTH_SHORT).show();
+                seekBar.setProgress(0);
+            }
+        } catch (Exception e) {
+            Log.e("Problem with seekbar ", "" + e);
+            seekBar.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }
