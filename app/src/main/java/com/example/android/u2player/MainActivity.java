@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         playButton.setEnabled(true);
     }
 
-    Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             updateProgress();
