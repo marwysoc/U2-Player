@@ -18,7 +18,7 @@ import static android.R.attr.onClick;
 
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
-    private Button rewindButton, pauseButton, playButton, forwardButton;
+    private Button rewindButton, pauseButton, playButton, forwardButton, backButton, nextButton;
     private SeekBar seekBar;
     private TextView artistTextView, titleTextView, time1TextView, time2TextView;
 
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         pauseButton = (Button) findViewById(R.id.pause_button);
         playButton = (Button) findViewById(R.id.play_button);
         forwardButton = (Button) findViewById(R.id.forward_button);
+        backButton = (Button) findViewById(R.id.back_button);
+        nextButton = (Button) findViewById(R.id.next_button);
 
         // Pause isn't enable when no sound is playing
         pauseButton.setEnabled(false);
