@@ -73,6 +73,24 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
             }
         });
+        rewindButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
 
         // Create an ArrayList of songs
         ArrayList<Song> songs = new ArrayList<>();
