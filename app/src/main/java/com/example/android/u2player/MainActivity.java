@@ -1,6 +1,5 @@
 package com.example.android.u2player;
 
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import static com.example.android.u2player.R.string.forward;
 
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
@@ -179,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                     Toast.LENGTH_SHORT).show();
         }
     }
-    
+
     private void playMusic(String songTitle, int songID) {
             // If MediaPlayer is empty create it
             if (mMediaPlayer == null) {
