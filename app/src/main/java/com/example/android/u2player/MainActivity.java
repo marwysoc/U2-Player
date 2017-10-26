@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static android.R.attr.onClick;
@@ -70,6 +71,22 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
             }
         });
+
+        // Create an ArrayList of songs
+        ArrayList<Song> songs = new ArrayList<>();
+
+        // Add songs to the ArrayList
+        songs.add(new Song(1, "I Will Follow", R.raw.track01));
+        songs.add(new Song(2, "Twilight", R.raw.track02));
+        songs.add(new Song(3, "An Cat Dubh", R.raw.track03));
+        songs.add(new Song(4, "Into The Heart", R.raw.track04));
+        songs.add(new Song(5, "Out of Control", R.raw.track05));
+        songs.add(new Song(6, "Stories For Boys", R.raw.track06));
+        songs.add(new Song(7, "The Ocean", R.raw.track07));
+        songs.add(new Song(8, "A Day Without Me", R.raw.track08));
+        songs.add(new Song(9, "Another Time, Another Place", R.raw.track09));
+        songs.add(new Song(10, "The Electric Co.", R.raw.track10));
+        songs.add(new Song(11, "Shadows And Tall Trees", R.raw.track11));
     }
 
     private void playMusic() {
