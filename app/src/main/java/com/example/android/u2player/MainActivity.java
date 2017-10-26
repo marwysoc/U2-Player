@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static android.R.attr.filterTouchesWhenObscured;
 import static android.R.attr.onClick;
 
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
@@ -28,6 +29,11 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     private double durationTime = 0;
 
     private Handler mHandler;
+
+    private int id = 0;
+
+    // Create an ArrayList of songs
+    final ArrayList<Song> songs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +61,24 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         mHandler = new Handler();
 
+        // Add songs to the ArrayList
+        songs.add(new Song(1, "I Will Follow", R.raw.track01));
+        songs.add(new Song(2, "Twilight", R.raw.track02));
+        songs.add(new Song(3, "An Cat Dubh", R.raw.track03));
+        songs.add(new Song(4, "Into The Heart", R.raw.track04));
+        songs.add(new Song(5, "Out of Control", R.raw.track05));
+        songs.add(new Song(6, "Stories For Boys", R.raw.track06));
+        songs.add(new Song(7, "The Ocean", R.raw.track07));
+        songs.add(new Song(8, "A Day Without Me", R.raw.track08));
+        songs.add(new Song(9, "Another Time, Another Place", R.raw.track09));
+        songs.add(new Song(10, "The Electric Co.", R.raw.track10));
+        songs.add(new Song(11, "Shadows And Tall Trees", R.raw.track11));
+
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playMusic();
+                //Start to play with the first song from the list.
+                playMusic(songs.get(0).getTitle(), songs.get(0).getSongResourceId());
             }
         });
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -82,38 +102,47 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playBack();
+                // If the id is equal to 0 tell user that there is no previous song to play.
+                if (id == 0) {
+                    Toast.makeText(getApplicationContext(), "You cannot go to previous song anymore :(",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    // Otherwise decrement id
+                    id--;
+                }
+
+                // Play previous song.
+                playBack(id);
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playNext();
+                // If the id is equal to 10 tell user that there is no next song to play.
+                if (id == 10) {
+                    Toast.makeText(getApplicationContext(), "You cannot go to next song anymore :(",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    // Otherwise increment id.
+                    id++;
+                }
+
+                // Play next song.
+                playNext(id);
             }
         });
-
-        // Create an ArrayList of songs
-        ArrayList<Song> songs = new ArrayList<>();
-
-        // Add songs to the ArrayList
-        songs.add(new Song(1, "I Will Follow", R.raw.track01));
-        songs.add(new Song(2, "Twilight", R.raw.track02));
-        songs.add(new Song(3, "An Cat Dubh", R.raw.track03));
-        songs.add(new Song(4, "Into The Heart", R.raw.track04));
-        songs.add(new Song(5, "Out of Control", R.raw.track05));
-        songs.add(new Song(6, "Stories For Boys", R.raw.track06));
-        songs.add(new Song(7, "The Ocean", R.raw.track07));
-        songs.add(new Song(8, "A Day Without Me", R.raw.track08));
-        songs.add(new Song(9, "Another Time, Another Place", R.raw.track09));
-        songs.add(new Song(10, "The Electric Co.", R.raw.track10));
-        songs.add(new Song(11, "Shadows And Tall Trees", R.raw.track11));
     }
 
-    private void playMusic() {
+    private void playMusic(String songTitle, int songID) {
         // If MediaPlayer is empty create it
         if (mMediaPlayer == null) {
-            mMediaPlayer = MediaPlayer.create(this, R.raw.track01);
+            mMediaPlayer = MediaPlayer.create(this, songID);
             seekBar.setEnabled(true);
+
+            // Set the title of the song.
+            titleTextView.setText(songTitle);
         }
 
         // If MediaPlayer is playing then pause it
@@ -155,17 +184,27 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     /**
      * This method is called when backButton is clicked.
      */
-    private void playBack() {
+    private void playBack(int songId) {
         releaseMedia();
+
+        // Create a new Song object which represents current song.
+        Song currentSong = songs.get(songId);
+
+        // Play previous song.
+        playMusic(currentSong.getTitle(), currentSong.getSongResourceId());
     }
 
     /**
      * This method is called when nextButton is clicked.
      */
-    private void playNext() {
+    private void playNext(int songId) {
         releaseMedia();
-        mMediaPlayer = MediaPlayer.create(this, R.raw.track02);
-        mMediaPlayer.start();
+
+        // Create a new Song object which represents current song.
+        Song currentSong = songs.get(songId);
+
+        // Play next song.
+        playMusic(currentSong.getTitle(), currentSong.getSongResourceId());
     }
 
     /**
