@@ -82,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                playBack();
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                playNext();
             }
         });
 
@@ -150,6 +150,36 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         pauseButton.setEnabled(false);
         // Enable play button
         playButton.setEnabled(true);
+    }
+
+    /**
+     * This method is called when backButton is clicked.
+     */
+    private void playBack() {
+        releaseMedia();
+    }
+
+    /**
+     * This method is called when nextButton is clicked.
+     */
+    private void playNext() {
+        releaseMedia();
+        mMediaPlayer = MediaPlayer.create(this, R.raw.track02);
+        mMediaPlayer.start();
+    }
+
+    /**
+     * Release media player's resources.
+     */
+    private void releaseMedia() {
+        if (mMediaPlayer != null) {
+            // Release media player's resources because they are no longer needed.
+            mMediaPlayer.release();
+
+            // Set the media player back to null. A media player
+            // is not configured to play an audio file at the moment.
+            mMediaPlayer = null;
+        }
     }
 
     private Runnable runnable = new Runnable() {
