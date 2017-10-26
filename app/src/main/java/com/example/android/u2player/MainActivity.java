@@ -35,18 +35,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     // Create an ArrayList of songs
     final ArrayList<Song> songs = new ArrayList<>();
 
-    /**
-     * This listener gets triggered when the {@link MediaPlayer} has completed
-     * playing the audio file.
-     */
-    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            // Now that the sound file has finished playing, release the media player resources.
-            releaseMedia();
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,10 +181,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             } else {
                 // Otherwise start playing
                 mMediaPlayer.start();
-
-                // Setup a listener on the media player, so that we can stop and release the
-                // media player once the sound has finished playing.
-                mMediaPlayer.setOnCompletionListener(mCompletionListener);
 
                 // Set duration of the sound
                 durationTime = mMediaPlayer.getDuration();
