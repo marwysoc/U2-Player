@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
+import static android.R.attr.onClick;
+
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private Button rewindButton, pauseButton, playButton, forwardButton;
@@ -56,11 +58,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 playMusic();
             }
         });
-
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pauseMusic();
+            }
+        });
+        forwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
