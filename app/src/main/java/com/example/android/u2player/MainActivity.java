@@ -14,9 +14,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import static android.R.attr.filterTouchesWhenObscured;
-import static android.R.attr.onClick;
-
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private Button rewindButton, pauseButton, playButton, forwardButton, backButton, nextButton;
@@ -113,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 }
 
                 // Play previous song.
-                playBack(id);
+                playPrevious(id);
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -184,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     /**
      * This method is called when backButton is clicked.
      */
-    private void playBack(int songId) {
+    private void playPrevious(int songId) {
         releaseMedia();
 
         // Create a new Song object which represents current song.
