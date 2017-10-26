@@ -1,5 +1,6 @@
 package com.example.android.u2player;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,18 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     // Create an ArrayList of songs
     final ArrayList<Song> songs = new ArrayList<>();
+
+    /**
+     * This listener gets triggered when the {@link MediaPlayer} has completed
+     * playing the audio file.
+     */
+    private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            // Now that the sound file has finished playing, release the media player resources.
+            releaseMedia();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,43 +179,47 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-
+    
     private void playMusic(String songTitle, int songID) {
-        // If MediaPlayer is empty create it
-        if (mMediaPlayer == null) {
-            mMediaPlayer = MediaPlayer.create(this, songID);
-            seekBar.setEnabled(true);
+            // If MediaPlayer is empty create it
+            if (mMediaPlayer == null) {
+                mMediaPlayer = MediaPlayer.create(this, songID);
+                seekBar.setEnabled(true);
 
-            // Set the title of the song.
-            titleTextView.setText(songTitle);
-        }
+                // Set the title of the song.
+                titleTextView.setText(songTitle);
+            }
 
-        // If MediaPlayer is playing then pause it
-        if (mMediaPlayer.isPlaying()) {
-            pauseMusic();
-        } else {
-            // Otherwise start playing
-            mMediaPlayer.start();
-            // Set duration of the sound
-            durationTime = mMediaPlayer.getDuration();
-            // Set the duration time to the textview
-            time2TextView.setText(String.format("%d min %d s",
-                    TimeUnit.MILLISECONDS.toMinutes((long) durationTime),
-                    TimeUnit.MILLISECONDS.toSeconds((long) durationTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
-                                    durationTime))));
+            // If MediaPlayer is playing then pause it
+            if (mMediaPlayer.isPlaying()) {
+                pauseMusic();
+            } else {
+                // Otherwise start playing
+                mMediaPlayer.start();
 
-            // Set the maximum value to the seekbar
-            seekBar.setMax(mMediaPlayer.getDuration());
-            // Enable the pause button when playing sound
-            pauseButton.setEnabled(true);
-            // Disable the play button - sound is already playing
-            playButton.setEnabled(false);
+                // Setup a listener on the media player, so that we can stop and release the
+                // media player once the sound has finished playing.
+                mMediaPlayer.setOnCompletionListener(mCompletionListener);
 
-            // Update seekbar and textview while playing the sound
-            updateProgress();
-        }
+                // Set duration of the sound
+                durationTime = mMediaPlayer.getDuration();
+                // Set the duration time to the textview
+                time2TextView.setText(String.format("%d min %d s",
+                        TimeUnit.MILLISECONDS.toMinutes((long) durationTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) durationTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                        durationTime))));
+
+                // Set the maximum value to the seekbar
+                seekBar.setMax(mMediaPlayer.getDuration());
+                // Enable the pause button when playing sound
+                pauseButton.setEnabled(true);
+                // Disable the play button - sound is already playing
+                playButton.setEnabled(false);
+
+                // Update seekbar and textview while playing the sound
+                updateProgress();
+            }
     }
 
     private void pauseMusic() {
