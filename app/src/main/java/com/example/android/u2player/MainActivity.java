@@ -14,7 +14,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.android.u2player.R.string.forward;
+
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+
+    private final int FORWARD = 5000;
+    private final int BACKWARD = 5000;
 
     private Button rewindButton, pauseButton, playButton, forwardButton, backButton, nextButton;
     private SeekBar seekBar;
@@ -87,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         forwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                forward();
             }
         });
         rewindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                rewind();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +136,37 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             }
         });
     }
+
+    /**
+     * This method is called when rewindButton is clicked.
+     */
+    private void rewind() {
+        // If the time we want to jump to is grater than 0 then jump to it.
+        if((mMediaPlayer.getCurrentPosition() - BACKWARD) > 0){
+            startTime = startTime - BACKWARD;
+            mMediaPlayer.seekTo((int) startTime);
+        }else{
+            // Otherwise tell user it isn't possible to jump backward.
+            Toast.makeText(getApplicationContext(),"Cannot jump backward 5 seconds",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * This method is called when forwardButton is clicked.
+     */
+    private void forward() {
+        // If the time we want to jump to is less or equal to the duration of the song the jump to it.
+        if((mMediaPlayer.getCurrentPosition() + FORWARD) <= durationTime){
+            startTime = startTime + FORWARD;
+            mMediaPlayer.seekTo((int) startTime);
+        }else{
+            // Otherwise tell user it isn't possible to jump forward.
+            Toast.makeText(getApplicationContext(),"Cannot jump forward 5 seconds",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void playMusic(String songTitle, int songID) {
         // If MediaPlayer is empty create it
