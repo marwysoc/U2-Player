@@ -15,6 +15,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     private final int FORWARD = 5000;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     private Button rewindButton, pauseButton, playButton, forwardButton, backButton, nextButton;
     private SeekBar seekBar;
     private TextView artistTextView, titleTextView, time1TextView, time2TextView;
+    private GifImageView gifImageView;
 
     private MediaPlayer mMediaPlayer;
 
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     private int id = 0;
 
-    // Create an ArrayList of songs
+    // Create an ArrayList of songs.
     final ArrayList<Song> songs = new ArrayList<>();
 
     @Override
@@ -48,7 +51,11 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         backButton = (Button) findViewById(R.id.back_button);
         nextButton = (Button) findViewById(R.id.next_button);
 
-        // Pause isn't enable when no sound is playing
+        gifImageView = (GifImageView) findViewById(R.id.gif);
+        // Set visibility to INVISIBLE - we won't the gif to be visible if nothing is playing.
+        gifImageView.setVisibility(View.GONE);
+
+        // Pause isn't enable when no sound is playing.
         pauseButton.setEnabled(false);
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         mHandler = new Handler();
 
-        // Add songs to the ArrayList
+        // Add songs to the ArrayList.
         songs.add(new Song(1, "I Will Follow", R.raw.track01));
         songs.add(new Song(2, "Twilight", R.raw.track02));
         songs.add(new Song(3, "An Cat Dubh", R.raw.track03));
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                             Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    // Otherwise decrement id
+                    // Otherwise decrement id.
                     id--;
                 }
 
@@ -167,7 +174,10 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     }
 
     private void playMusic(String songTitle, int songID) {
-            // If MediaPlayer is empty create it
+        // If some music is playing show gif image.
+        gifImageView.setVisibility(View.VISIBLE);
+
+            // If MediaPlayer is empty create it.
             if (mMediaPlayer == null) {
                 mMediaPlayer = MediaPlayer.create(this, songID);
                 seekBar.setEnabled(true);
@@ -176,38 +186,41 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 titleTextView.setText(songTitle);
             }
 
-            // If MediaPlayer is playing then pause it
+            // If MediaPlayer is playing then pause it.
             if (mMediaPlayer.isPlaying()) {
                 pauseMusic();
             } else {
-                // Otherwise start playing
+                // Otherwise start playing.
                 mMediaPlayer.start();
 
-                // Set duration of the sound
+                // Set duration of the sound.
                 durationTime = mMediaPlayer.getDuration();
-                // Set the duration time to the textview
+                // Set the duration time to the textview.
                 time2TextView.setText(String.format("%d min %d s",
                         TimeUnit.MILLISECONDS.toMinutes((long) durationTime),
                         TimeUnit.MILLISECONDS.toSeconds((long) durationTime) -
                                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
                                         durationTime))));
 
-                // Set the maximum value to the seekbar
+                // Set the maximum value to the seekbar.
                 seekBar.setMax(mMediaPlayer.getDuration());
-                // Enable the pause button when playing sound
+                // Enable the pause button when playing sound.
                 pauseButton.setEnabled(true);
-                // Disable the play button - sound is already playing
+                // Disable the play button - sound is already playing.
                 playButton.setEnabled(false);
 
-                // Update seekbar and textview while playing the sound
+                // Update seekbar and textview while playing the sound.
                 updateProgress();
             }
     }
 
     private void pauseMusic() {
+        // If music is paused hide gif image.
+        gifImageView.setVisibility(View.GONE);
+
         // Pause the sound
         mMediaPlayer.pause();
-        // Disable puase button - sound is already paused
+        // Disable puase button - sound is already paused.
         pauseButton.setEnabled(false);
         // Enable play button
         playButton.setEnabled(true);
@@ -260,13 +273,13 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         }
     };
 
-    // Update progress in seekBar and time1TextView
+    // Update progress in seekBar and time1TextView.
     private void updateProgress() {
-        // Get data from the MediaPlayer
+        // Get data from the MediaPlayer.
         startTime = mMediaPlayer.getCurrentPosition();
         // Update seekbar
         seekBar.setProgress((int)startTime);
-        // Update textview with the current time of the sound
+        // Update textview with the current time of the sound.
         time1TextView.setText(String.format("%d min %d s",
                 TimeUnit.MILLISECONDS.toMinutes((long) startTime),
                 TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
@@ -276,16 +289,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     }
 
 
-    // This method is called when user touches the seekbar and changes its position
+    // This method is called when user touches the seekbar and changes its position.
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         try {
             if (mMediaPlayer.isPlaying() || mMediaPlayer != null) {
                 if (fromUser)
-                    // go to the position from the seekbar
+                    // go to the position from the seekbar.
                     mMediaPlayer.seekTo(progress);
             } else if (mMediaPlayer == null) {
-                // Inform user any sound is playing now
+                // Inform user any sound is playing now.
                 Toast.makeText(getApplicationContext(), "You're not playing any song now",
                         Toast.LENGTH_SHORT).show();
                 seekBar.setProgress(0);
